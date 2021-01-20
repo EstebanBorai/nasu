@@ -1,0 +1,20 @@
+[package]
+name = "nasu"
+version = "0.0.0"
+authors = ["Esteban Borai <estebanborai@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "MIT"
+description = "Command-line utility which poll on remote addresses in order to perform status checks periodically"
+readme = "README.md"
+repository = "https://github.com/EstebanBorai/nasu"
+categories = ["asynchronous", "command-line-utilities", "development-tools", "web-programming"]
+
+[lib]
+name = "nasu"
+path = "src/lib/lib.rs"
+
+[[bin]]
+name = "cli"
+path = "src/bin/main.rs"
