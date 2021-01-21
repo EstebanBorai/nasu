@@ -12,9 +12,9 @@ repository = "https://github.com/EstebanBorai/nasu"
 categories = ["asynchronous", "command-line-utilities", "development-tools", "web-programming"]
 
 [lib]
-name = "nasu"
+name = "libnasu"
 path = "src/lib/lib.rs"
 
 [[bin]]
-name = "cli"
+name = "nasu"
 path = "src/bin/main.rs"

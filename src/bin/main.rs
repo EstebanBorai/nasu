@@ -1,4 +1,4 @@
-use nasu::hello;
+use libnasu::hello;
 
 fn main() {
   hello();
