@@ -5,44 +5,20 @@ on:
     tags:
       - 'v*'
 
+env:
+  ASSET_NAME: nasu_cli
+
 jobs:
-  build:
-    name: Publish for ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        name: [
-            linux,
-            windows,
-            macos
-        ]
-
-        include:
-          - name: linux
-            os: ubuntu-latest
-            artifact_name: nasu
-            asset_name: nasu-linux
-            asset_extension: .tar.gz
-
-          - name: windows
-            os: windows-latest
-            artifact_name: nasu.exe
-            asset_name: nasu-windows
-            asset_extension: .zip
-
-          - name: macos
-            os: macos-latest
-            artifact_name: nasu
-            asset_name: nasu-macos
-            asset_extension: .tar.gz
-
+  release:
+    name: Publishes crate to crates.io
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
 
     - name: Set env
       run: |
-          RELEASE_VERSION=$(echo ${GITHUB_REF:10})
-          echo ::set-env name=ASSET_NAME::${{ matrix.asset_name }}-$RELEASE_VERSION${{ matrix.asset_extension }}
+          echo RELEASE_VERSION=$(echo ${GITHUB_REF:10}) >> $GITHUB_ENV
+          echo name=ASSET_NAME::nasu-$RELEASE_VERSION$ >> $GITHUB_ENV
       shell: bash
 
     - uses: actions-rs/toolchain@v1
@@ -51,7 +27,7 @@ jobs:
         toolchain: stable
 
     - name: Build
-      run: cargo build --release --locked
+      run: cargo build
 
     - name: Archive Release
       shell: bash
@@ -103,5 +79,5 @@ jobs:
         env:
           CRATES_IO_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
 
-      - name: publish nasu
-        run: cargo publish
+      - name: Publish
+        run: cargo publish --allow-dirty

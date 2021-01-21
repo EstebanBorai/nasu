@@ -38,3 +38,9 @@ git tag -a  v0.1.0 -m "First release"
 ```
 
 > Tags must follow SemVer conventions and must be prefixed with a lowercase `v` letter.
+
+Then push tags as follows:
+
+```shell
+git push origin main --follow-tags
+```
