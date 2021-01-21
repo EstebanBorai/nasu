@@ -1,5 +1,6 @@
-use libnasu::hello;
+use libnasu::tasks::adapters::from_file;
 
-fn main() {
-  hello();
+#[tokio::main]
+async fn main() {
+    println!("{:#?}", from_file("nasu.json").unwrap());
 }

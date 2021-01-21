@@ -1,0 +1,17 @@
+[
+  {
+    "type": "http",
+    "title": "httpbin",
+    "task": {
+      "interval": "*/5 * * * *"
+    },
+    "params": {
+      "url": "http://httpbin.org/get",
+      "method": "GET",
+      "headers": {
+        "authorization": "Bearer abc",
+        "content-type": "application/json"
+      }
+    }
+  }
+]
