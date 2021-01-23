@@ -18,3 +18,6 @@ path = "src/lib/lib.rs"
 [[bin]]
 name = "nasu"
 path = "src/bin/main.rs"
+
+[dev-dependencies]
+tokio-test = "0.4.0"
