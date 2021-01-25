@@ -1,4 +1,9 @@
+mod http;
 mod macros;
+mod resume;
+mod utils;
+
+pub(crate) use macros::*;
 
 pub fn hello() {
   println!("Welcome to Nasu! 🧑🏻‍⚕️ Command-line utility which poll on remote addresses in order to perform status checks periodically");
