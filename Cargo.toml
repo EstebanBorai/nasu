@@ -19,5 +19,10 @@ path = "src/lib/lib.rs"
 name = "nasu"
 path = "src/bin/main.rs"
 
+[dependencies]
+hyper = { version = "0.14", features = ["client", "http1", "http2", "tcp"] }
+hyper-tls = "0.5"
+url = "2"
+
 [dev-dependencies]
 tokio-test = "0.4.0"
