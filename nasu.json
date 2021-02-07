@@ -1,0 +1,11 @@
+[
+  {
+    "type": "http",
+    "title": "httpbin",
+    "url": "http://httpbin.org/get",
+    "method": "GET",
+    "headers": {
+      "content-type": "application/json"
+    }
+  }
+]

@@ -2,7 +2,7 @@
 /// during library testing
 #[macro_export]
 macro_rules! bo {
-  ($e:expr) => {
-    tokio_test::block_on($e)
-  };
+    ($e:expr) => {
+        tokio_test::block_on($e)
+    };
 }

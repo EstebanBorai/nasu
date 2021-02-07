@@ -1,5 +1,8 @@
-use libnasu::hello;
+use libnasu::run;
 
-fn main() {
-  hello();
+#[tokio::main]
+async fn main() {
+    if let Err(e) = run().await {
+        println!("{}", e.to_string());
+    };
 }

@@ -1,5 +1,5 @@
+mod config;
 mod provider;
-mod target;
 
+pub use config::*;
 pub use provider::*;
-pub use target::*;
