@@ -11,14 +11,15 @@ use crate::worker::{Squad, Worker};
 const CONFIG_FILE_NAME: &str = "nasu.json";
 
 pub async fn run() -> Result<()> {
-    let tasks = from_file("nasu.json").context("Failed to parse \"nasu.json\"")?;
+    let tasks =
+        from_file(CONFIG_FILE_NAME).context(format!("Failed to parse \"{}\"", CONFIG_FILE_NAME))?;
     let workers: Vec<Worker> = tasks.into_iter().map(|task| Worker::from(task)).collect();
-    let (tx, rx) = channel::<Report>(1024);
+    let (tx, mut rx) = channel::<Report>(1024);
     let squad = Squad::new(workers, tx);
 
     let print_proc = tokio::spawn(async move {
-        while let Some(response) = rx.recv().await {
-            println!("{:#?}", response);
+        while let Some(report) = rx.recv().await {
+            println!("{:#?}", report);
         }
     });
 
@@ -27,10 +28,10 @@ pub async fn run() -> Result<()> {
     });
 
     tokio::select! {
-      print_proc = print_proc => {
+      _ = print_proc => {
         Err(Error::msg("Output process stopped"))
       },
-      run_proc = run_proc => {
+      _ = run_proc => {
         Err(Error::msg("Run process stopped"))
       },
     }

@@ -1,13 +1,28 @@
 [
   {
     "type": "http",
-    "title": "httpbin",
+    "title": "httpbin get",
     "task": {
       "interval": "*/5 * * * *"
     },
     "params": {
       "url": "http://httpbin.org/get",
       "method": "GET",
+      "headers": {
+        "authorization": "Bearer abc",
+        "content-type": "application/json"
+      }
+    }
+  },
+  {
+    "type": "http",
+    "title": "httpbin post",
+    "task": {
+      "interval": "*/5 * * * *"
+    },
+    "params": {
+      "url": "http://httpbin.org/post",
+      "method": "POST",
       "headers": {
         "authorization": "Bearer abc",
         "content-type": "application/json"

@@ -1,10 +1,19 @@
+use anyhow::Result;
+
 use crate::providers::http;
+use crate::report::Report;
 use crate::tasks::{Task, TaskType};
 
 use super::perform::Perform;
 
 pub struct Worker {
-    perform: Box<dyn Perform>,
+    perform: Box<dyn Perform + Sync + Send>,
+}
+
+impl Worker {
+    pub async fn perform_task(&self) -> Result<Report> {
+        self.perform.perform().await
+    }
 }
 
 impl From<Task> for Worker {
