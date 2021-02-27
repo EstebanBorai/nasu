@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::time::interval;
@@ -15,17 +16,31 @@ impl Squad {
         Self { tx, workers }
     }
 
-    pub async fn start(&self) {
+    pub async fn start(self) {
+        let workers = Arc::new(
+            self.workers
+                .into_iter()
+                .map(|w| Arc::new(w))
+                .collect::<Vec<Arc<Worker>>>(),
+        );
+        let tx = Arc::new(self.tx);
         let mut interval = interval(Duration::from_secs(3));
 
         loop {
             interval.tick().await;
+            let workers = Arc::clone(&workers);
+            let tx = Arc::clone(&tx);
 
-            for worker in self.workers.iter() {
-                match worker.perform_task().await {
-                    Ok(report) => self.tx.send(report).await.unwrap(),
-                    Err(err) => eprintln!("{:?}", err),
-                }
+            for worker in workers.iter() {
+                let worker = Arc::clone(worker);
+                let tx = Arc::clone(&tx);
+
+                tokio::spawn(async move {
+                    match worker.perform_task().await {
+                        Ok(report) => tx.send(report).await.unwrap(),
+                        Err(e) => eprintln!("{:?}", e),
+                    }
+                });
             }
         }
     }

@@ -9,6 +9,7 @@ use url::Url;
 
 use crate::report::Report;
 use crate::tasks::{Params as TaskParams, Task};
+use crate::utils::timestamp::current_timestamp;
 use crate::worker::perform::Perform;
 
 use super::{Params, Report as HttpReport};
@@ -55,6 +56,7 @@ impl Provider {
 #[async_trait]
 impl Perform for Provider {
     async fn perform(&self) -> Result<Report> {
+        let req_start = current_timestamp();
         let request = Request::builder()
             .uri(Uri::from_str(self.url.as_str()).unwrap())
             .method(self.http_method.clone())
@@ -72,8 +74,11 @@ impl Perform for Provider {
         }
 
         let http_report = HttpReport {
+            id: self.task_title.clone(),
             status_code: response.status().as_u16(),
             headers,
+            req_start,
+            req_end: current_timestamp(),
         };
 
         Ok(Report::Http(http_report))
