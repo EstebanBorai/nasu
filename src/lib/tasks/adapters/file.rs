@@ -10,7 +10,6 @@ where
     P: AsRef<Path> + std::fmt::Debug + std::marker::Copy,
 {
     let contents = read_to_string(path).context(format!("Failed to read file at {:?}", path,))?;
-
     let config = from_str(&contents).context("Invalid config file provided")?;
 
     Ok(config)

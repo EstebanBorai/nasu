@@ -29,22 +29,20 @@ impl Provider {
             _ => {
                 return Err(Error::msg(format!(
                     "Inavlid params provided for task {}",
-                    task.title
+                    task.id
                 )));
             }
         };
 
         let url = Url::from_str(params.url.as_str())
-            .context(format!("Invalid URL provided for task {}", task.title))?;
+            .context(format!("Invalid URL provided for task {}", task.id))?;
 
         let http_client = HyperClient::builder().build(HttpsConnector::new());
-        let http_method = Method::from_str(params.method.as_str()).context(format!(
-            "Invalid HTTP Method provided for task {}",
-            task.title
-        ))?;
+        let http_method = Method::from_str(params.method.as_str())
+            .context(format!("Invalid HTTP Method provided for task {}", task.id))?;
 
         Ok(Self {
-            task_title: task.title,
+            task_title: task.id,
             http_client,
             http_method,
             params,

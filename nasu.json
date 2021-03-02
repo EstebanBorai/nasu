@@ -1,9 +1,9 @@
 [
   {
+    "id": "httpbin get",
     "type": "http",
-    "title": "httpbin get",
     "task": {
-      "interval": "*/5 * * * *"
+      "interval": "*/5 * * * * *"
     },
     "params": {
       "url": "http://httpbin.org/get",
@@ -15,10 +15,10 @@
     }
   },
   {
+    "id": "httpbin post",
     "type": "http",
-    "title": "httpbin post",
     "task": {
-      "interval": "*/5 * * * *"
+      "interval": "* */10 * * * *"
     },
     "params": {
       "url": "http://httpbin.org/post",

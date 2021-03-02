@@ -10,7 +10,7 @@ pub enum TaskType {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Rules {
-    interval: String,
+    pub interval: String,
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -21,9 +21,9 @@ pub enum Params {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Task {
+    pub id: String,
     #[serde(rename = "type")]
     pub task_type: TaskType,
-    pub title: String,
     pub task: Rules,
     pub params: Params,
 }

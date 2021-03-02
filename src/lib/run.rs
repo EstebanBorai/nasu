@@ -1,6 +1,7 @@
 use anyhow::{Context, Error, Result};
 use tokio::sync::mpsc::channel;
 
+use crate::providers::http::Report as HttpReport;
 use crate::report::Report;
 use crate::tasks::adapters::from_file;
 use crate::worker::{Squad, Worker};
@@ -18,8 +19,19 @@ pub async fn run() -> Result<()> {
     let squad = Squad::new(workers, tx);
 
     let print_proc = tokio::spawn(async move {
+        println!("ID\tStatus\tReq. Start\tReq. End");
         while let Some(report) = rx.recv().await {
-            println!("{:#?}", report);
+            match report {
+                Report::Http(HttpReport {
+                    id,
+                    req_end,
+                    req_start,
+                    status_code,
+                    ..
+                }) => {
+                    println!("{}\t{}\t{}\t{}", id, status_code, req_start, req_end);
+                }
+            }
         }
     });
 
