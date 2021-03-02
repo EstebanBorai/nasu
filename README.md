@@ -36,6 +36,63 @@ Worker in responsible of performing the task
 ### Task
 
 Defintion of steps to be performed on a Service by a Worker
+
+### `nasu.json` Reference
+
+`nasu.json` is the default configuration file for Nasu. This file is
+parsed at startup by Nasu to initialize `Workers`.
+
+The `nasu.json` file is composed by an array of `Task` objects as shown
+below:
+
+```json
+// nasu.json
+[
+  {
+    "id": "HTTPBIN POST Request",
+    "type": "http",
+    "task": {
+      "interval": "* */10 * * * *"
+    },
+    "params": {
+      "url": "http://httpbin.org/post",
+      "method": "POST",
+      "headers": {
+        "authorization": "Bearer <Token>",
+        "content-type": "application/json"
+      }
+    }
+  }
+]
+```
+
+Each of these `Task` must contain the following properties:
+
+Property | Description | Required | Possible Values
+--- | --- | --- | ---
+`id` | The id of the service. Used as reference for the user | Yes | N/A
+`type` | Type of service to perform check on | Yes | `http`
+`task` | Task configuration | Yes | N/A
+`task.interval` | Cron defintion to specify when to perform the test | Yes | N/A
+`params` | Params for the `Worker` used on perform. [Refer to Worker Params](#worker-params) | Yes | N/A
+
+### Worker Params
+
+`Worker` params may vary based on the `type` of worker in question.
+Properties defined below belong to an object specified in the `Task`
+object, inside of the `params` property.
+
+#### HTTP Worker Params
+
+- Type: `http`
+- Property: `params`
+
+Property | Description | Required | Possible Values
+--- | --- | --- | ---
+`url` | URL to perform the HTTP Request | Yes | N/A
+`method` | HTTP Method to perform the request with | Yes | `GET`, `PATCH`, `POST`, `PUT`, `DELETE`
+`headers` | HTTP Headers to provide to the request | No | N/A
+
 ## Release
 
 In order to create a release you must push a Git tag as follows

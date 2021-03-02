@@ -24,7 +24,7 @@ impl Squad {
                 .collect::<Vec<Arc<Worker>>>(),
         );
         let tx = Arc::new(self.tx);
-        let mut interval = interval(Duration::from_secs(3));
+        let mut interval = interval(Duration::from_secs(5));
 
         loop {
             interval.tick().await;
@@ -32,15 +32,20 @@ impl Squad {
             let tx = Arc::clone(&tx);
 
             for worker in workers.iter() {
-                let worker = Arc::clone(worker);
-                let tx = Arc::clone(&tx);
+                if worker.must_run() {
+                    let worker = Arc::clone(worker);
+                    let tx = Arc::clone(&tx);
 
-                tokio::spawn(async move {
-                    match worker.perform_task().await {
-                        Ok(report) => tx.send(report).await.unwrap(),
-                        Err(e) => eprintln!("{:?}", e),
-                    }
-                });
+                    tokio::spawn(async move {
+                        match worker.perform_task().await {
+                            Ok(report) => {
+                                // worker.tick();
+                                tx.send(report).await.unwrap();
+                            }
+                            Err(e) => eprintln!("{:?}", e),
+                        }
+                    });
+                }
             }
         }
     }
