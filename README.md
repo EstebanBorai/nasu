@@ -23,6 +23,19 @@
 Nāsu (from Japanese ナース [Nāsu], which means nurse), is a command-line utility
 to perform checks on remote addresses periodically.
 
+## Terminology
+
+### Service
+
+Service to perform task against through the Worker
+
+### Worker
+
+Worker in responsible of performing the task
+
+### Task
+
+Defintion of steps to be performed on a Service by a Worker
 ## Release
 
 In order to create a release you must push a Git tag as follows

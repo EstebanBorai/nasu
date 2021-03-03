@@ -20,7 +20,7 @@
 
 # Number of spaces per tab.
 # Default: 4
-tab_spaces = 2
+tab_spaces = 4
 
 # Maximum width of the args of a function call before
 # falling back to vertical formatting.
