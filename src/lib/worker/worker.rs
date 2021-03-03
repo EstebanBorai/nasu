@@ -2,6 +2,7 @@ use anyhow::Result;
 use chrono::{DateTime, Utc};
 use cron::Schedule;
 use std::str::FromStr;
+use tokio::sync::RwLock;
 
 use crate::providers::http;
 use crate::report::Report;
@@ -12,35 +13,33 @@ use super::perform::Perform;
 pub struct Worker {
     perform: Box<dyn Perform + Sync + Send>,
     interval: Schedule,
-    last_run_at: Option<DateTime<Utc>>,
+    last_run_at: RwLock<Option<DateTime<Utc>>>,
 }
 
 impl Worker {
     /// Performs this Worker's task
     pub async fn perform_task(&self) -> Result<Report> {
-        self.perform.perform().await
+        let report = self.perform.perform().await?;
+        *self.last_run_at.write().await = Some(Utc::now());
+
+        Ok(report)
     }
 
     /// Checks if the Worker must be executed or not based
     /// on the defined interval
-    pub fn must_run(&self) -> bool {
-        match self.last_run_at {
-            Some(last_run_at) => {
-                let now = Utc::now();
-                let next_run_at = self.interval.after(&last_run_at).next().unwrap();
+    pub async fn must_run(&self) -> bool {
+        if let Some(last_run_at) = *self.last_run_at.read().await {
+            let now = Utc::now();
+            let next_run_at = self.interval.after(&last_run_at).next().unwrap();
 
-                if now > next_run_at {
-                    return true;
-                }
-
-                false
+            if now > next_run_at {
+                return true;
             }
-            None => true,
-        }
-    }
 
-    pub fn tick(&mut self) {
-        self.last_run_at = Some(Utc::now());
+            return false;
+        }
+
+        true
     }
 }
 
@@ -55,7 +54,7 @@ impl From<Task> for Worker {
                 Self {
                     perform: Box::new(http_provider),
                     interval,
-                    last_run_at: None,
+                    last_run_at: RwLock::new(None),
                 }
             }
         }

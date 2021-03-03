@@ -1,4 +1,4 @@
-use anyhow::{Context, Error, Result};
+use anyhow::{Context, Result};
 use async_trait::async_trait;
 use hyper::client::HttpConnector;
 use hyper::{Body, Client as HyperClient, Method, Request, Uri};
@@ -14,6 +14,7 @@ use crate::worker::perform::Perform;
 
 use super::{Params, Report as HttpReport};
 
+#[allow(dead_code)]
 pub struct Provider {
     task_title: String,
     http_client: HyperClient<HttpsConnector<HttpConnector>>,
@@ -26,12 +27,6 @@ impl Provider {
     pub fn new(task: Task) -> Result<Self> {
         let params = match task.params {
             TaskParams::Http(p) => p,
-            _ => {
-                return Err(Error::msg(format!(
-                    "Inavlid params provided for task {}",
-                    task.id
-                )));
-            }
         };
 
         let url = Url::from_str(params.url.as_str())

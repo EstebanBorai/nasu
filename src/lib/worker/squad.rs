@@ -32,7 +32,7 @@ impl Squad {
             let tx = Arc::clone(&tx);
 
             for worker in workers.iter() {
-                if worker.must_run() {
+                if worker.must_run().await {
                     let worker = Arc::clone(worker);
                     let tx = Arc::clone(&tx);
 
