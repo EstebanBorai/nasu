@@ -1,6 +1,6 @@
 [package]
 name = "nasu"
-version = "0.0.2"
+version = "0.1.0"
 authors = ["Esteban Borai <estebanborai@gmail.com>", "David Camperos"]
 edition = "2018"
 
